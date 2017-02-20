@@ -1,10 +1,10 @@
-#include <ButtonLED.h>
+#include <ButtonLED/ButtonLED.h>
 
-#include <EEPROM.h>
+#include <eeprom.h>
 
-#include <OpenLCB.h>
+#include <OpenLCB/OpenLCB.h>
 
-#include <can.h>
+#include <OpenLCB/utility/include/can.h>
 
 #include "MyEventHandler.h"
 #include "MyConfigHandler.h"
@@ -38,8 +38,9 @@ MyBlueGoldHandler bg;
 MyInfoHandler info;
 
 /* define the Blue/Gold devices */
-ButtonLed blue(BLUE, LOW); // button on pin 14
-ButtonLed gold(GOLD, LOW); // button on pin 15
+ButtonLed blue(36, LOW); // button on Arduino pin 36
+ButtonLed gold(37, LOW); // button on Arduino pin 37
+//Jan changed the 2 above lines as these 2 original definitions are not part of the CAN_MCP2515.h whereas they might be part of the lpc17xx_pinsel.h which I can't find
 
 int available()
 {
@@ -50,7 +51,7 @@ int available()
   if (__malloc_heap_end)
     return __malloc_heap_end - __brkval;
   return (byte*)((byte*)(&stack) - (byte*)__brkval) - (byte*)__malloc_margin;
-} 
+}
 
 void loadNodeID(OLCB_NodeID *nid)
 {
@@ -103,7 +104,7 @@ void setup()
 
 void loop()
 {
-  // OpenLCB statndard processing:
+  // OpenLCB standard processing:
   link.update();
   if (link.wasActiveSet()) {
     link.resetWasActive();
